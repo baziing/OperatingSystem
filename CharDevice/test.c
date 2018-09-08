@@ -17,16 +17,16 @@ int main(void)
 	system("ls /dev/");
 	printf("You wanna to use the \"myDevice\"");
 	fgets(devName, 20, stdin);
-	fd = open(DEV_NAME, O_RDONLY | O_NDELAY);
+	fd = open(DEV_NAME, O_RDWR | O_NDELAY);
 	if (fd != -1)
 	{
 		read(fd, buf, sizeof(buf));
 		printf("The device was inited with a string : %s\n", buf);
-		 // ≤‚ ‘–¥
+		 // ¬≤√¢√ä√î√ê¬¥
 		printf("Please input a string  :\n");
 		fgets(get, MAX_SIZE, stdin);
 		write(fd, get, sizeof(get));
-		// ≤‚ ‘∂¡
+		// ¬≤√¢√ä√î¬∂√Å
 		read(fd, buf, sizeof(buf)); 
 		system("dmesg");
 		printf("\nThe string in the device now is : %s\n", buf);
