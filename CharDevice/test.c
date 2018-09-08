@@ -22,11 +22,11 @@ int main(void)
 	{
 		read(fd, buf, sizeof(buf));
 		printf("The device was inited with a string : %s\n", buf);
-		 // ²âÊÔÐ´
+		 //测试写
 		printf("Please input a string  :\n");
 		fgets(get, MAX_SIZE, stdin);
 		write(fd, get, sizeof(get));
-		// ²âÊÔ¶Á
+		//测试读
 		read(fd, buf, sizeof(buf)); 
 		system("dmesg");
 		printf("\nThe string in the device now is : %s\n", buf);
