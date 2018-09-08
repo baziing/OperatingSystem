@@ -14,22 +14,22 @@ static ssize_t my_read(struct file *file, char __user *user, size_t t, loff_t *f
 static ssize_t my_write(struct file *file, const char __user *user, size_t t, loff_t *f);
 
 static char message[MAX_SIZE] = "succeed!";
-static int device_num = 0;//Éè±¸ºÅ
-static int counter = 0;//¼ÆÊıÓÃ
-static int mutex = 0;//»¥³âÓÃ
-static char* devName = "myDevice";//Éè±¸Ãû
+static int device_num = 0;//è®¾å¤‡å·
+static int counter = 0;//è®¡æ•°ç”¨
+static int mutex = 0;//äº’æ–¥ç”¨
+static char* devName = "myDevice";//è®¾å¤‡å
 
 struct file_operations pStruct =
 { open:my_open, release:my_release, read:my_read, write:my_write, };
 
-// ×¢²áÄ£¿é
+// æ³¨å†Œæ¨¡å—
 int init_module()
 {
 	int ret;
-	/* µÚÒ»¸ö²ÎÊıÊÇÖ¸ĞÂ×¢²áµÄÉè±¸µÄÖ÷Éè±¸ºÅÓÉÏµÍ³·ÖÅä£¬
-	 * µÚ¶ş¸ö²ÎÊıÊÇĞÂÉè±¸×¢²áÊ±µÄÉè±¸Ãû×Ö£¬
-	 * µÚÈı¸ö²ÎÊıÊÇÖ¸Ïòfile_operationsµÄÖ¸Õë£¬
-	 * µ±ÓÃÉè±¸ºÅÎª0´´½¨Ê±£¬ÏµÍ³Ò»¸ö¿ÉÒÔÓÃµÄÉè±¸ºÅ´´½¨Ä£¿é */
+	/* ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯æŒ‡æ–°æ³¨å†Œçš„è®¾å¤‡çš„ä¸»è®¾å¤‡å·ç”±ç³»ç»Ÿåˆ†é…ï¼Œ
+	 * ç¬¬äºŒä¸ªå‚æ•°æ˜¯æ–°è®¾å¤‡æ³¨å†Œæ—¶çš„è®¾å¤‡åå­—ï¼Œ
+	 * ç¬¬ä¸‰ä¸ªå‚æ•°æ˜¯æŒ‡å‘file_operationsçš„æŒ‡é’ˆï¼Œ
+	 * å½“ç”¨è®¾å¤‡å·ä¸º0åˆ›å»ºæ—¶ï¼Œç³»ç»Ÿä¸€ä¸ªå¯ä»¥ç”¨çš„è®¾å¤‡å·åˆ›å»ºæ¨¡å— */
 	ret = register_chrdev(0, devName, &pStruct);
 	if (ret < 0)
 	{
@@ -41,26 +41,26 @@ int init_module()
 		printk("the device has been registered!\n");
 		device_num = ret;
 		printk("the virtual device's major number %d.\n", device_num);
-		printk("------'mknod /dev/myCharDev c %d 0'-------\n", device_num);
+		printk("------'mknod /dev/myDevice c %d 0'-------\n", device_num);
 		printk("Use \"rmmod\" to remove the module\n");
 
 		return 0;
 	}
 }
 
-// ×¢ÏúÄ£¿é
+// æ³¨é”€æ¨¡å—
 void cleanup_module()
 {
 	unregister_chrdev(device_num, devName);
 	printk("unregister it success!\n");
 }
 
-//´ò¿ªÉè±¸
+//æ‰“å¼€è®¾å¤‡
 static int my_open(struct inode *inode, struct file *file)
 {
         if(mutex)
                 return -EBUSY;
-        mutex = 1;//ÉÏËø
+        mutex = 1;//ä¸Šé”
 	printk("main  device : %d\n", MAJOR(inode->i_rdev));
 	printk("slave device : %d\n", MINOR(inode->i_rdev));
 	printk("%d times to call the device\n", ++counter);
@@ -68,29 +68,29 @@ static int my_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
-// Ã¿´ÎÊ¹ÓÃÍêºó»áÊÍ·Å
+// æ¯æ¬¡ä½¿ç”¨å®Œåä¼šé‡Šæ”¾
 static int my_release(struct inode *inode, struct file *file)
 {
 	printk("Device released!\n");
 	module_put(THIS_MODULE);
-        mutex = 0;//¿ªËø
+        mutex = 0;//å¼€é”
 	return 0;
 }
 
-//¶Á²Ù×÷
+//è¯»æ“ä½œ
 static ssize_t my_read(struct file *file, char __user *user, size_t t, loff_t *f)
 {
-	if(copy_to_user(user,message,sizeof(message))) // ÄÚºË¿Õ¼äµ½ÓÃ»§¿Õ¼äµÄ¸´ÖÆ 
+	if(copy_to_user(user,message,sizeof(message))) // å†…æ ¸ç©ºé—´åˆ°ç”¨æˆ·ç©ºé—´çš„å¤åˆ¶ 
 	{
 		return -EFAULT;
 	}
 	return sizeof(message);
 }
 
-//Ğ´²Ù×÷
+//å†™æ“ä½œ
 static ssize_t my_write(struct file *file, const char __user *user, size_t t, loff_t *f)
 {
-	if(copy_from_user(message,user,sizeof(message))) //ÓÃ»§¿Õ¼äµ½ÄÚºË¿Õ¼äµÄ¸´ÖÆ 
+	if(copy_from_user(message,user,sizeof(message))) //ç”¨æˆ·ç©ºé—´åˆ°å†…æ ¸ç©ºé—´çš„å¤åˆ¶ 
 	{
 		return -EFAULT;
 	}
