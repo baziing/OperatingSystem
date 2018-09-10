@@ -130,29 +130,29 @@ int FileSystem::init()
  */
 void FileSystem::createFileSystem()
 {
-    printf("正在创建系统...\n");
+    printf("Creating system...\n");
     
     if ((fp = fopen(name,"wb+"))==NULL)
     {
-        printf("打开 %s 失败...\n",name);
+        printf("Fail to open %s\n",name);
         ::exit(-1);
     }
     
     //init user
-    printf("用户名长度必须在1-10位之间，并且不允许出现空格\n");
-    printf("用户名:");
+    printf("The length of the username must be between 1-10 bits, and spaces are not allowed.\n");
+    printf("username:");
     fgets(user.username, sizeof(user.username), stdin);
     if(user.username[strlen(user.username)-1] == '\n')
         user.username[strlen(user.username)-1] = '\0';
     system("stty -echo");
-    printf("密码:");
+    printf("password:");
     fgets(user.password, sizeof(user.password), stdin);
     if(user.password[strlen(user.password)-1] == '\n')
         user.password[strlen(user.password)-1] = '\0';
     system("stty echo");
-    printf("密码长度必须在1-10位之间\n");
-    printf("密码:");
-    printf("用户名:%s\n密码:%s\n", user.username, user.password);
+    printf("Password length must be between 1-10 bits.\n");
+    printf("password:");
+    printf("username:%s\npassword:%s\n", user.username, user.password);
     setUser(user);
     
     //init superBlock
@@ -203,7 +203,7 @@ void FileSystem::createFileSystem()
     getFcbLink(curLink, curInode);
     //get current path
     curPath = "/";
-    printf("创建文件系统 %s 成功.\n", this->name);
+    printf("Create %s successfully.\n", this->name);
     
 }
 
@@ -219,10 +219,10 @@ void FileSystem::openFileSystem()
     }
     else
     {
-        printf("打开文件系统...\n");
+        printf("Opening system...\n");
         if ((fp=fopen(this->name,"rb+"))==NULL)
         {
-            printf("打开文件 %s 失败\n", name);
+            printf("Fail to open %s\n", name);
             ::exit(1);
         }
         rewind(fp);
@@ -237,7 +237,7 @@ void FileSystem::openFileSystem()
         getFcbLink(curLink, curInode);
         //get current path
         curPath = "/";
-        printf("打开文件 %s 成功s\n", this->name);
+        printf("Open %s successfully\n", this->name);
     }
 }
 
@@ -248,17 +248,17 @@ void FileSystem::openFileSystem()
 void FileSystem::help()
 {
     printf("命令: \n\
-           help    ---  显示菜单 \n\
-           logout  ---  登出 \n\
-           account ---  修改用户名和用户密码 \n\
-           cd      ---  打开文件夹 \n\
-           mkdir   ---  创建文件夹   \n\
-           touch   ---  创建文件 \n\
-           cat     ---  读文件 \n\
-           write   ---  写文件 \n\
-           rm      ---  删除文件夹或文件 \n\
-           mv      ---  重命名 \n\
-           exit    ---  退出系统\n");
+           help    ---  Display menu \n\
+           logout  ---  Logout \n\
+           account ---  Modify username and user password \n\
+           cd      ---  Open a folder \n\
+           mkdir   ---  Create a folder \n\
+           touch   ---  Create a file \n\
+           cat     ---  Read a file \n\
+           write   ---  Write a file \n\
+           rm      ---  Delete a folder or a file \n\
+           mv      ---  Rename \n\
+           exit    ---  Exit system\n");
 }
 
 /**
@@ -293,7 +293,7 @@ int FileSystem::cd(char* name)
     }
     else
     {
-        printf("没有此文件\n");
+        printf("No such file.\n");
         return -1;
     }
 }
@@ -307,12 +307,12 @@ int FileSystem::createFile(char * name, unsigned char isDir)
 {
     if(name==NULL||strcmp(name, "") == 0)
     {
-        printf("文件名不能为空，请重新操作\n");
+        printf("The filename cannot be empty. Please reoperate.\n");
         return -1;
     }
     if(findChildInode(curLink, name)>0)
     {
-        printf("该文件名已经存在，请重新操作\n");
+        printf("The file name already exists. Please reoperate.\n");
         return -1;
     }
     unsigned int index;
@@ -367,13 +367,13 @@ int FileSystem::createFile(char * name, unsigned char isDir)
         }
         else
         {
-            printf("没有多余的空间\n");
+            printf("There is no spare space.\n");
             return -1;
         }
     }
     else
     {
-        printf("没有多余的空间\n");
+        printf("There is no spare space.\n");
         return -1;
     }
     
@@ -555,14 +555,14 @@ int FileSystem::read(char *name)
         }
         else
         {
-            printf("发生错误，请重新操作\n");
+            printf("An error occurred. Please reoperate.\n");
             return -1;
         }
         
     }
     else
     {
-        printf("未找到该文件，请重新操作\n");
+        printf("The file was not found. Please reoperate.\n");
         return -1;
     }
     return 0;
@@ -616,9 +616,9 @@ int FileSystem::write(char *name)
                     }
                     else
                     {
-                        printf("You have input %ld Byte dat, continue?[Y/N]", len);
+                        printf("continue?[Y/n]:");
                         ch = getchar();
-                        if(ch != 'Y' && ch != 'y')
+                        if(ch != 'Y')
                         {
                             pInode->length = len;
                             time(&(pInode->time));
@@ -654,9 +654,9 @@ int FileSystem::write(char *name)
                         }
                         else
                         {
-                            printf("You have input %ld Byte dat, continue?[Y/N]", len);
+                            printf("continue?[Y/n]:");
                             ch = getchar();
-                            if(ch != 'Y' && ch != 'y')
+                            if(ch != 'Y' )
                             {
                                 pInode->length = len;
                                 time(&(pInode->time));
@@ -698,11 +698,11 @@ int FileSystem::write(char *name)
                         }
                         else
                         {
-                            printf("是否继续输入？Y/n（区分大小写）：");
+                            printf("continue?[Y/n]:");
                             char ch=getchar();
                             while(ch!='Y'||ch!='n')
                             {
-                                printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                 ch=getchar();
                             }
                             if(ch=='n')
@@ -738,11 +738,11 @@ int FileSystem::write(char *name)
                             }
                             else
                             {
-                                printf("是否继续输入？Y/n（区分大小写）：");
+                                printf("continue?[Y/n]:");
                                 char ch=getchar();
                                 while(ch!='Y'||ch!='n')
                                 {
-                                    printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                    printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                     ch=getchar();
                                 }
                                 if(ch=='n')
@@ -792,11 +792,11 @@ int FileSystem::write(char *name)
                         }
                         else
                         {
-                            printf("是否继续输入？Y/n（区分大小写）：");
+                            printf("continue?[Y/n]:");
                             char ch=getchar();
                             while(ch!='Y'||ch!='n')
                             {
-                                printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                 ch=getchar();
                             }
                             if(ch=='n')
@@ -831,11 +831,11 @@ int FileSystem::write(char *name)
                             }
                             else
                             {
-                                printf("是否继续输入？Y/n（区分大小写）：");
+                                printf("continue?[Y/n]:");
                                 char ch=getchar();
                                 while(ch!='Y'||ch!='n')
                                 {
-                                    printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                    printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                     ch=getchar();
                                 }
                                 if(ch=='n')
@@ -884,11 +884,11 @@ int FileSystem::write(char *name)
                                 }
                                 else
                                 {
-                                    printf("是否继续输入？Y/n（区分大小写）：");
+                                    printf("continue?[Y/n]:");
                                     char ch=getchar();
                                     while(ch!='Y'||ch!='n')
                                     {
-                                        printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                        printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                         ch=getchar();
                                     }
                                     if(ch=='n')
@@ -924,11 +924,11 @@ int FileSystem::write(char *name)
                                     }
                                     else
                                     {
-                                        printf("是否继续输入？Y/n（区分大小写）：");
+                                        printf("continue?[Y/n]:");
                                         char ch=getchar();
                                         while(ch!='Y'||ch!='n')
                                         {
-                                            printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                            printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                             ch=getchar();
                                         }
                                         if(ch=='n')
@@ -980,11 +980,11 @@ int FileSystem::write(char *name)
                                     }
                                     else
                                     {
-                                        printf("是否继续输入？Y/n（区分大小写）：");
+                                        printf("continue?[Y/n]:");
                                         char ch=getchar();
                                         while(ch!='Y'||ch!='n')
                                         {
-                                            printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                            printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                             ch=getchar();
                                         }
                                         if(ch=='n')
@@ -1019,11 +1019,11 @@ int FileSystem::write(char *name)
                                         }
                                         else
                                         {
-                                            printf("是否继续输入？Y/n（区分大小写）：");
+                                            printf("continue?[Y/n]:");
                                             char ch=getchar();
                                             while(ch!='Y'||ch!='n')
                                             {
-                                                printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                                printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                                 ch=getchar();
                                             }
                                             if(ch=='n')
@@ -1089,11 +1089,11 @@ int FileSystem::write(char *name)
                                     }
                                     else
                                     {
-                                        printf("是否继续输入？Y/n（区分大小写）：");
+                                        printf("continue?[Y/n]:");
                                         char ch=getchar();
                                         while(ch!='Y'||ch!='n')
                                         {
-                                            printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                            printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                             ch=getchar();
                                         }
                                         if(ch=='n')
@@ -1129,11 +1129,11 @@ int FileSystem::write(char *name)
                                         }
                                         else
                                         {
-                                            printf("是否继续输入？Y/n（区分大小写）：");
+                                            printf("continue?[Y/n]:");
                                             char ch=getchar();
                                             while(ch!='Y'||ch!='n')
                                             {
-                                                printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                                printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                                 ch=getchar();
                                             }
                                             if(ch=='n')
@@ -1185,11 +1185,11 @@ int FileSystem::write(char *name)
                                         }
                                         else
                                         {
-                                            printf("是否继续输入？Y/n（区分大小写）：");
+                                            printf("continue?[Y/n]:");
                                             char ch=getchar();
                                             while(ch!='Y'||ch!='n')
                                             {
-                                                printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                                printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                                 ch=getchar();
                                             }
                                             if(ch=='n')
@@ -1224,11 +1224,11 @@ int FileSystem::write(char *name)
                                             }
                                             else
                                             {
-                                                printf("是否继续输入？Y/n（区分大小写）：");
+                                                printf("continue?[Y/n]:");
                                                 char ch=getchar();
                                                 while(ch!='Y'||ch!='n')
                                                 {
-                                                    printf("输入字符错误，请重新输入，Y/n（区分大小写）：\n");
+                                                    printf("Input character error, please re-enter.Input character error, please re-enter.\n");
                                                     ch=getchar();
                                                 }
                                                 if(ch=='n')
@@ -1274,7 +1274,7 @@ int FileSystem::write(char *name)
     }
     else
     {
-        printf("未找到该文件，请重新操作\n");
+        printf("The file was not found. Please reoperate.\n");
         return -1;
     }
 }
@@ -1499,7 +1499,7 @@ int FileSystem::del(char* name)
     }
     else
     {
-        printf("找不到该文件\n");
+        printf("The file was not found.\n");
         return -1;
     }
     
@@ -1513,12 +1513,12 @@ int FileSystem::mv(char* name, char* newName)
 {
     if(name==NULL||strcmp(name, "") == 0)
     {
-        printf("用户名不能为空，请重新操作\n");
+        printf("The user name can not be empty. Please reoperate.\n");
         return -1;
     }
     if(newName==NULL||strcmp(newName, "") == 0)
     {
-        printf("新用户名不能为空，请重新操作\n");
+        printf("The new user name can not be empty. Please reoperate\n");
         return -1;
     }
     unsigned int id = findChildInode(curLink, name);
@@ -1545,7 +1545,7 @@ int FileSystem::mv(char* name, char* newName)
     }
     else
     {
-        printf("未找到该文件，请重新操作\n");
+        printf("The file was not found. Please reoperate.\n");
         return -1;
     }
 }
@@ -1561,12 +1561,12 @@ void FileSystem::login()
     char password[10];
     while(1)
     {
-        printf("用户名:");
+        printf("username:");
         fgets(username, sizeof(username), stdin);
         if(username[strlen(username)-1] == '\n')
             username[strlen(username)-1] = '\0';
         system("stty -echo");
-        printf("密码:");
+        printf("password:");
         fgets(password, sizeof(password), stdin);
         if(password[strlen(password)-1] == '\n')
             password[strlen(password)-1] = '\0';
@@ -1576,7 +1576,7 @@ void FileSystem::login()
             break;
         else
         {
-            printf("用户名或者密码错误，请重新操作\n");
+            printf("The user name or password is wrong. Please reoperate.\n");
         }
     }
 }
@@ -1616,7 +1616,7 @@ int FileSystem::account()
     char password[10];
     
     system("stty -echo");
-    printf("密码:");
+    printf("password:");
     fgets(password, 10, stdin);
     if(password[strlen(password)-1] == '\n')
         password[strlen(password)-1] = '\0';
@@ -1626,14 +1626,14 @@ int FileSystem::account()
     {
         while(1)
         {
-            printf("用户名长度必须在1-10位之间，并且不允许出现空格\n");
-            printf("新用户名:");
+            printf("The length of the user name must be between 1-10 bits, and spaces are not allowed.\n");
+            printf("new username:");
             fgets(username, 10, stdin);
             if(username[strlen(username)-1] == '\n')
                 username[strlen(username)-1] = '\0';
             system("stty -echo");
-            printf("密码长度必须在1-10位之间\n");
-            printf("新密码:");
+            printf("Password length must be between 1-10 bits.\n");
+            printf("new password:");
             fgets(password, 10, stdin);
             if(password[strlen(password)-1] == '\n')
                 password[strlen(password)-1] = '\0';
@@ -1644,12 +1644,12 @@ int FileSystem::account()
         strcpy(user.username, username);
         strcpy(user.password, password);
         setUser(user);
-        printf("修改账户名成功\n");
+        printf("Modify account name successfully.\n");
         return 0;
     }
     else
     {
-        printf("用户名或者密码错误，请重新操作\n");
+        printf("The user name or password is wrong. Please reoperate.\n");
         return -1;
     }
 }
@@ -1704,7 +1704,7 @@ void FileSystem::command()
                 account();
                 break;
             default:
-                printf("不支持该命令\n");
+                printf("This command is not supported.\n");
                 break;
         }
     }while(1);
@@ -1783,7 +1783,7 @@ unsigned int FileSystem::getAvailableBlockId()
 {
     if(superBlock.blockFree <= 0)
     {
-        printf("没有空余的数据块\n");
+        printf("There is no spare space.\n");
         return 0;
     }
     
@@ -1797,7 +1797,7 @@ unsigned int FileSystem::getAvailableBlockId()
             return i;
         }
     }
-    printf("没有空余的数据块\n");
+    printf("There is no spare space.\n");
     return 0;
 }
 
@@ -1855,7 +1855,7 @@ unsigned int FileSystem::getAvailableInodeId()
             return i;
         }
     }
-    printf("没有多余的空间\n");
+    printf("There is no spare space.\n");
     return 0;
 }
 
@@ -2032,7 +2032,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                 blockId = getAvailableBlockId();
                 if(blockId<=0)
                 {
-                    printf("没有多余的空间\n");
+                    printf("There is no spare space.\n");
                     return 0;
                 }
                 superBlock.blockFree--;
@@ -2056,7 +2056,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
         addrBlockId = getAvailableBlockId();
         if(addrBlockId<=0)
         {
-            printf("没有多余的空间\n");
+            printf("There is no spare space.\n");
             return 0;
         }
         superBlock.blockFree--;
@@ -2091,7 +2091,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                 blockId = getAvailableBlockId();
                 if(blockId<=0)
                 {
-                    printf("没有多余的空间\n");
+                    printf("There is no spare space.\n");
                     return 0;
                 }
                 superBlock.blockFree--;
@@ -2144,7 +2144,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                         blockId = getAvailableBlockId();
                         if(blockId<=0)
                         {
-                            printf("没有多余的空间\n");
+                            printf("There is no spare space.\n");
                             return 0;
                         }
                         superBlock.blockFree--;
@@ -2168,7 +2168,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                 addrBlockId = getAvailableBlockId();
                 if(addrBlockId<=0)
                 {
-                    printf("没有多余的空间\n");
+                    printf("There is no spare space.\n");
                     return 0;
                 }
                 superBlock.blockFree--;
@@ -2204,7 +2204,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                         blockId = getAvailableBlockId();
                         if(blockId<=0)
                         {
-                            printf("没有多余的空间\n");
+                            printf("There is no spare space.\n");
                             return 0;
                         }
                         superBlock.blockFree--;
@@ -2230,7 +2230,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
         addrBlockId2 = getAvailableBlockId();
         if(addrBlockId2<=0)
         {
-            printf("没有多余的空间\n");
+            printf("There is no spare space.\n");
             return 0;
         }
         superBlock.blockFree--;
@@ -2275,7 +2275,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                             blockId = getAvailableBlockId();
                             if(blockId<=0)
                             {
-                                printf("没有多余的空间\n");
+                                printf("There is no spare space.\n");
                                 return 0;
                             }
                             superBlock.blockFree--;
@@ -2299,7 +2299,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                     addrBlockId = getAvailableBlockId();
                     if(addrBlockId<=0)
                     {
-                        printf("没有多余的空间\n");
+                        printf("There is no spare space.\n");
                         return 0;
                     }
                     superBlock.blockFree--;
@@ -2335,7 +2335,7 @@ unsigned int FileSystem::getAvailableFileItem(Inode& inode, unsigned int* availa
                             blockId = getAvailableBlockId();
                             if(blockId<=0)
                             {
-                                printf("没有多余的空间\n");
+                                printf("There is no spare space.\n");
                                 return 0;
                             }
                             superBlock.blockFree--;
