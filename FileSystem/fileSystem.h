@@ -66,7 +66,7 @@ typedef struct{
     unsigned int length;  //4B,文件长度,unsigned int最大2^32-1(4GB-1B),目录文件则为子文件项数量
     unsigned char type;   //1B,文件权限,0-read-only,1-read-write
     time_t time;          //8B,文件最后修改时间，从1970年1月1日00时00分00秒至今所经过的秒数
-    unsigned int addr[12];//12*4B,文件内容索引,文件前10项为直接索引，目录前11项为直接索引
+    unsigned int addr[12];//12*4B,文件内容索引,前10项为直接索引，11项为一级索引，12项为二级索引
     unsigned int blockId;  //文件项所在的目录数据块的id，便于删除时定位
 }Inode,*PInode;
 
