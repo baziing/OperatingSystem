@@ -145,14 +145,13 @@ void FileSystem::createFileSystem()
     if(user.username[strlen(user.username)-1] == '\n')
         user.username[strlen(user.username)-1] = '\0';
     system("stty -echo");
+    printf("Password length must be between 1-10 bits.\n");
     printf("password:");
     fgets(user.password, sizeof(user.password), stdin);
     if(user.password[strlen(user.password)-1] == '\n')
         user.password[strlen(user.password)-1] = '\0';
     system("stty echo");
-    printf("Password length must be between 1-10 bits.\n");
-    printf("password:");
-    printf("username:%s\npassword:%s\n", user.username, user.password);
+    printf("\nusername:%s\npassword:%s\n", user.username, user.password);
     setUser(user);
     
     //init superBlock
