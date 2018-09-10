@@ -247,7 +247,7 @@ void FileSystem::openFileSystem()
  */
 void FileSystem::help()
 {
-    printf("命令: \n\
+    printf("command: \n\
            help    ---  Display menu \n\
            logout  ---  Logout \n\
            account ---  Modify username and user password \n\
